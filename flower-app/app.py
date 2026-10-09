@@ -1,0 +1,54 @@
+import json
+import numpy as np
+import streamlit as st
+import tensorflow as tf
+from PIL import Image, ImageOps
+
+IMG_SIZE = (128, 128)
+
+st.set_page_config(page_title="Klasifikasi Bunga", page_icon="🌼")
+
+@st.cache_resource
+def muat_model():
+    return tf.keras.models.load_model("model_optimasi.keras", compile=False)
+
+@st.cache_data
+def muat_kelas():
+    with open("class_names.json", encoding="utf-8") as f:
+        return json.load(f)
+
+model = muat_model()
+kelas = muat_kelas()
+
+st.title("🌼 Klasifikasi Bunga")
+st.write("Unggah foto bunga, lalu model CNN (MobileNetV2) akan memprediksi jenisnya: "
+         "daisy, dandelion, roses, sunflowers, atau tulips.")
+
+file = st.file_uploader("Pilih gambar", type=["jpg", "jpeg", "png", "webp"])
+
+if file is not None:
+    img = ImageOps.exif_transpose(Image.open(file)).convert("RGB")
+    st.image(img, caption="Gambar yang diunggah", use_container_width=True)
+    # st.image(img, caption="Gambar yang diunggah", use_column_width=True)
+
+    # Preprocessing sama dengan saat training: resize 128x128, nilai 0-1
+    # (layer Rescaling untuk MobileNetV2 sudah ada di dalam model)
+    x = np.asarray(img.resize(IMG_SIZE, Image.NEAREST), dtype="float32") / 255.0
+    x = np.expand_dims(x, axis=0)
+
+    with st.spinner("Memprediksi..."):
+        probs = model.predict(x, verbose=0)[0]
+
+    idx = int(np.argmax(probs))
+    st.subheader(f"Prediksi: {kelas[idx]}")
+    st.metric("Tingkat keyakinan", f"{probs[idx]:.1%}")
+
+    if probs[idx] < 0.60:
+        st.warning("Keyakinan rendah. Gambar mungkin bukan salah satu dari 5 jenis bunga "
+                   "yang dikenali model, atau fotonya kurang jelas.")
+
+    st.write("Probabilitas semua kelas:")
+    for k, p in sorted(zip(kelas, probs), key=lambda t: -t[1]):
+        st.write(f"**{k}** — {p:.1%}")
+        st.progress(float(p))
+    st.bar_chart({k: float(p) for k, p in zip(kelas, probs)})
