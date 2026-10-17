@@ -24,7 +24,19 @@ def muat_kelas():
 model = muat_model()
 kelas = muat_kelas()
 
-st.title("🌼 Klasifikasi Bunga - AI TA 2 (Group 8)")
+st.title("🌼 Klasifikasi Bunga - AI LEC Team Assignment 2 (Group 8)")
+st.markdown(
+    """
+**Members:**
+
+| Name | NIM |
+|---|---|
+| Handson Panggabean | 2902820005 |
+| Khenaro Daffa Asyrof | 2902824590 |
+| Irfan Siswara | 2902813126 |
+| Muhammad Bayu Setiawan | 2602293852 |
+"""
+)
 st.write("Unggah foto bunga, lalu model CNN (MobileNetV2) akan memprediksi jenisnya: daisy, dandelion, roses, sunflowers, atau tulips.")
 
 kol_kiri, kol_kanan = st.columns(2)
