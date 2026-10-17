@@ -1,3 +1,5 @@
+import base64
+import io
 import json
 import numpy as np
 import streamlit as st
@@ -22,7 +24,7 @@ def muat_kelas():
 model = muat_model()
 kelas = muat_kelas()
 
-st.title("🌼 Klasifikasi Bunga")
+st.title("🌼 Klasifikasi Bunga - AI TA 2 (Group 8)")
 st.write("Unggah foto bunga, lalu model CNN (MobileNetV2) akan memprediksi jenisnya: daisy, dandelion, roses, sunflowers, atau tulips.")
 
 kol_kiri, kol_kanan = st.columns(2)
@@ -31,7 +33,15 @@ with kol_kiri:
     file = st.file_uploader("Pilih gambar", type=["jpg", "jpeg", "png", "webp"])
     if file is not None:
         img = ImageOps.exif_transpose(Image.open(file)).convert("RGB")
-        st.image(img, caption="Gambar yang diunggah", use_container_width=True)
+
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=90)
+        b64 = base64.b64encode(buf.getvalue()).decode()
+        st.markdown(
+            f'<img src="data:image/jpeg;base64,{b64}" style="width:100%;border-radius:8px">'
+            f'<p style="text-align:center;color:gray">Gambar yang diunggah</p>',
+            unsafe_allow_html=True,
+        )
 
 with kol_kanan:
     if file is None:
