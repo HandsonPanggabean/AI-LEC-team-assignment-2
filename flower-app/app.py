@@ -3,18 +3,20 @@ import numpy as np
 import streamlit as st
 import tensorflow as tf
 from PIL import Image, ImageOps
+from pathlib import Path
 
 IMG_SIZE = (128, 128)
+BASE = Path(__file__).parent
 
 st.set_page_config(page_title="Klasifikasi Bunga", page_icon="🌼", layout="wide")
 
 @st.cache_resource
 def muat_model():
-    return tf.keras.models.load_model("model_optimasi.keras", compile=False)
+    return tf.keras.models.load_model(str(BASE / "model_optimasi.keras"), compile=False)
 
 @st.cache_data
 def muat_kelas():
-    with open("class_names.json", encoding="utf-8") as f:
+    with open(BASE / "class_names.json", encoding="utf-8") as f:
         return json.load(f)
 
 model = muat_model()
