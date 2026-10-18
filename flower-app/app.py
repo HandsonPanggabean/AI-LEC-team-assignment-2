@@ -32,7 +32,9 @@ def muat_kelas():
 def muat_thumbnail(nama):
     img = ImageOps.exif_transpose(Image.open(FOLDER_UJI / nama)).convert("RGB")
     img.thumbnail((300, 300))
-    return img
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG", quality=85)
+    return base64.b64encode(buf.getvalue()).decode()
  
  
 def kelas_sebenarnya(nama):
@@ -109,7 +111,11 @@ with kol_kiri:
         for kol, nama in zip(kolom, daftar):
             with kol:
                 if (FOLDER_UJI / nama).exists():
-                    st.image(muat_thumbnail(nama))
+                    st.markdown(
+                        f'<img src="data:image/jpeg;base64,{muat_thumbnail(nama)}" '
+                        f'style="width:100%;border-radius:8px">',
+                        unsafe_allow_html=True,
+                    )
                     st.caption(nama)
                     st.button(
                         "Pilih",
