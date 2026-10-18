@@ -30,10 +30,10 @@ with st.expander("Members"):
             """
     | Name | NIM |
     |---|---|
-    | Handson Panggabean | 2902820005 |
     | Khenaro Daffa Asyrof | 2902824590 |
     | Irfan Siswara | 2902813126 |
     | Muhammad Bayu Setiawan | 2602293852 |
+    | Handson Panggabean | 2902820005 |
     """
     )
 st.write("Unggah foto bunga, lalu model CNN (MobileNetV2) akan memprediksi jenisnya: daisy, dandelion, roses, sunflowers, atau tulips.")
