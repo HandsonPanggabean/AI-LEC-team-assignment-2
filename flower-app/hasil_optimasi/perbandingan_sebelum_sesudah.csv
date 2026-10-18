@@ -1,0 +1,4 @@
+Model,Akurasi,Precision (macro),Recall (macro),F1 (macro),Jumlah parameter
+Sebelum (CNN Tugas 1),0.6676,0.6725,0.6702,0.6655,101829
+Transfer learning (MobileNetV2 + BN + Dropout),0.8427,0.845,0.842,0.842,2269509
+Sesudah (+ fine-tuning),0.8782,0.8779,0.8785,0.8776,2269509
